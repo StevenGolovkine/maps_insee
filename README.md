@@ -1,2 +1,3 @@
-# maps_insee
-Maps from INSEE data
+# Maps using INSEE data
+
+This repostitory contains the code to reproduce the creation of maps from INSEE data.
