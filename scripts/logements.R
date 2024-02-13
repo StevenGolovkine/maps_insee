@@ -16,57 +16,62 @@ fr <- read_rds('./data/france.rds')
 logement <- read_csv('./data/logements.csv')
 
 # Join
-df <- fr |> inner_join(logement, by = join_by(depart_code == REGION))
+df <- fr |> 
+    inner_join(logement, by = join_by(depart_code == REGION)) |> 
+    mutate(n_logement_bin = cut(df$N_LOGEMENT, breaks = seq(0, 8e5, by = 1e5)))
+
 
 # Plot France
-myPalette <- colorRampPalette(RColorBrewer::brewer.pal(11, "Purples"))
+myPalette <- RColorBrewer::brewer.pal(8, "PuRd")
+names(myPalette) <- levels(df$n_logement_bin)
+col_scale <- scale_fill_manual(name = "n_logement_bin", values = myPalette)
 
 # Metropolitan
 fr_metro <- df |> filter(type == 'Metropolitan département')
 fr_metro_gg <- ggplot() +
-    geom_sf(data = fr_metro, aes(fill = N_LOGEMENT)) +
-    scale_fill_gradientn(
-        colours = myPalette(100), limits = c(0, 1e6)
-    ) +
+    geom_sf(data = fr_metro, aes(fill = n_logement_bin)) +
+    col_scale +
     labs(
         title = "Nombre de logements ordinaires en France en 2020",
         subtitle = "Source: INSEE.fr — Recensement 2020"
     ) +
     theme_own() +
     theme(
-        legend.title = element_blank()
-    ) +
-    guides(fill = guide_colourbar(barwidth = 15, barheight = 1))
+        legend.title = element_blank(),
+        legend.text = element_text(size = 6, family = "Courier"),
+        plot.title = element_text(size = 8, family = "Courier"),
+        plot.subtitle = element_text(size = 6, family = "Courier")
+    )
 
 # La Réunion
 reunion <- df |> filter(name == 'La Réunion')
 reunion_gg <- ggplot() +
-    geom_sf(data = reunion, aes(fill = N_LOGEMENT)) +
-    scale_fill_gradientn(colours = myPalette(100), limits = c(0, 1e6)) +
+    geom_sf(data = reunion, aes(fill = n_logement_bin)) +
+    col_scale +
     theme_void() +
     theme(legend.position = "none")
 
 # Martinique
 martinique <- df |> filter(name == 'Martinique')
 martinique_gg <- ggplot() +
-    geom_sf(data = martinique, aes(fill = N_LOGEMENT)) +
-    scale_fill_gradientn(colours = myPalette(100), limits = c(0, 1e6)) +
+    geom_sf(data = martinique, aes(fill = n_logement_bin)) +
+    col_scale +
     theme_void() +
     theme(legend.position = "none")
 
 # Guadeloupe
 guadeloupe <- df |> filter(name == 'Guadeloupe')
 guadeloupe_gg <- ggplot() +
-    geom_sf(data = guadeloupe, aes(fill = N_LOGEMENT)) +
-    scale_fill_gradientn(colours = myPalette(100), limits = c(0, 1e6)) +
+    geom_sf(data = guadeloupe, aes(fill = n_logement_bin)) +
+    col_scale +
     theme_void() +
     theme(legend.position = "none")
 
 # Guyane
 guyane <- df |> filter(name == 'Guyane française')
 guyane_gg <- ggplot() +
-    geom_sf(data = guyane, aes(fill = N_LOGEMENT)) +
-    scale_fill_gradientn(colours = myPalette(100), limits = c(0, 1e6)) +
+    geom_sf(data = guyane, aes(fill = n_logement_bin)) +
+    col_scale +
     theme_void() +
     theme(legend.position = "none")
 
@@ -86,3 +91,6 @@ ggarrange(
     widths = c(6, 1)
 )
 
+ggsave(
+    "./figures/logement.png", width = 1080, height = 1080, units = "px"
+)
