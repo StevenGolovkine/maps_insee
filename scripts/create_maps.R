@@ -7,17 +7,19 @@ library(maps)
 library(tidyverse)
 library(sf)
 
+source('./scripts/theme.R')
+
 # Load France shapefile
-fr <- rnaturalearth::ne_states("france")
+fr <- read_rds('./data/france.rds')
 
 
 # Plot France
 
 # Metropolitan
-fr_metro <- fr |> filter(type_en == 'Metropolitan department')
+fr_metro <- fr |> filter(type == 'Metropolitan département')
 fr_metro_gg <- ggplot() +
     geom_sf(data = fr_metro) +
-    theme_void()
+    theme_own()
 
 # Mayotte
 mayotte <- fr |> filter(name == 'Mayotte')
