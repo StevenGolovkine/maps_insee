@@ -17,8 +17,12 @@ logement <- read_csv('./data/logements.csv')
 
 # Join
 df <- fr |> 
-    inner_join(logement, by = join_by(depart_code == REGION)) |> 
-    mutate(n_logement_bin = cut(df$N_LOGEMENT, breaks = seq(0, 8e5, by = 1e5)))
+    inner_join(logement, by = join_by(depart_code == REGION))
+df <- df |>
+    mutate(n_logement_bin = cut(N_LOGEMENT, breaks = seq(0, 8e5, by = 1e5))) |> 
+    mutate(n_logement_print = scales::label_number(
+        scale_cut = scales::cut_short_scale(), accuracy = 0.1)(N_LOGEMENT)
+    )
 
 
 # Plot France
@@ -30,11 +34,29 @@ col_scale <- scale_fill_manual(
     labels = LABELS, drop = FALSE
 )
 
+labels <- ggrepel::geom_label_repel(
+    stat = "sf_coordinates",
+    fill = alpha(c("white"), 0.5),
+    min.segment.length = 0,
+    max.overlaps = 4,
+    color = "black",
+    segment.color = "black",
+    family = "Courier",
+    fontface = "bold",
+    size = 1,
+    box.padding = 0.05,
+    label.size = 0.1,
+    segment.size = 0.1
+)
 
 # Metropolitan
 fr_metro <- df |> filter(type == 'Metropolitan département')
-fr_metro_gg <- ggplot() +
-    geom_sf(data = fr_metro, aes(fill = n_logement_bin)) +
+fr_metro_gg <- ggplot(
+        data = fr_metro,
+        aes(fill = n_logement_bin, label = n_logement_print, geometry = geometry)
+    ) +
+    geom_sf() +
+    labels +
     col_scale +
     theme_own() +
     theme(
@@ -46,43 +68,51 @@ fr_metro_gg <- ggplot() +
 
 # La Réunion
 reunion <- df |> filter(name == 'La Réunion')
-reunion_gg <- ggplot() +
-    geom_sf(data = reunion, aes(fill = n_logement_bin)) +
+reunion_gg <- ggplot(
+        data = reunion,
+        aes(fill = n_logement_bin, label = n_logement_print, geometry = geometry)
+    ) +
+    geom_sf() +
+    labels +
     col_scale +
     theme_void() +
-    theme(
-        legend.position = "none"
-    )
+    theme(legend.position = "none")
 
 # Martinique
 martinique <- df |> filter(name == 'Martinique')
-martinique_gg <- ggplot() +
-    geom_sf(data = martinique, aes(fill = n_logement_bin)) +
+martinique_gg <- ggplot(
+        data = martinique,
+        aes(fill = n_logement_bin, label = n_logement_print, geometry = geometry)
+    ) +
+    geom_sf() +
+    labels + 
     col_scale +
     theme_void() +
-    theme(
-        legend.position = "none"
-    )
+    theme(legend.position = "none")
 
 # Guadeloupe
 guadeloupe <- df |> filter(name == 'Guadeloupe')
-guadeloupe_gg <- ggplot() +
-    geom_sf(data = guadeloupe, aes(fill = n_logement_bin)) +
+guadeloupe_gg <- ggplot(
+        data = guadeloupe,
+        aes(fill = n_logement_bin, label = n_logement_print, geometry = geometry)
+    ) +
+    geom_sf() +
+    labels +
     col_scale +
     theme_void() +
-    theme(
-        legend.position = "none"
-    )
+    theme(legend.position = "none")
 
 # Guyane
 guyane <- df |> filter(name == 'Guyane française')
-guyane_gg <- ggplot() +
-    geom_sf(data = guyane, aes(fill = n_logement_bin)) +
+guyane_gg <- ggplot(
+        data = guyane,
+        aes(fill = n_logement_bin, label = n_logement_print, geometry = geometry)
+    ) +
+    geom_sf() +
+    labels + 
     col_scale +
     theme_void() +
-    theme(
-        legend.position = "none"
-    )
+    theme(legend.position = "none")
 
 
 # Arrange plots
@@ -112,5 +142,7 @@ annotate_figure(
 ) + theme(plot.margin = margin(0.1, 0.1, 0.1, 0.1, "cm")) 
 
 ggsave(
-    "./figures/logement.png", width = 1080, height = 1080, units = "px"
+    "./figures/logement.png",
+    width = 1080, height = 1080, units = "px",
+    bg = "white"
 )
