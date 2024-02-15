@@ -34,19 +34,19 @@ col_scale <- scale_fill_manual(
     labels = LABELS, drop = FALSE
 )
 
-labels <- ggrepel::geom_label_repel(
+labels <- ggpp::geom_label_s(
     stat = "sf_coordinates",
     fill = alpha(c("white"), 0.5),
-    min.segment.length = 0,
-    max.overlaps = 4,
-    color = "black",
-    segment.color = "black",
+    #min.segment.length = 0,
+    #max.overlaps = 4,
+    #color = "black",
+    #segment.color = "black",
     family = "Courier",
     fontface = "bold",
     size = 1,
-    box.padding = 0.05,
-    label.size = 0.1,
-    segment.size = 0.1
+    #box.padding = 0.05,
+    #label.size = 0.1,
+    #segment.size = 0.1
 )
 
 # Metropolitan
