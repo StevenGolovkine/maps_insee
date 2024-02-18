@@ -31,7 +31,7 @@ PARIS <- c('Paris', 'Hauts-de-Seine', 'Seine-Saint-Denis', 'Val-de-Marne')
 PALETTE <- RColorBrewer::brewer.pal(8, "PuRd")
 names(PALETTE) <- levels(df$n_logement_bin)
 
-ADD_LABELS <- TRUE
+ADD_LABELS <- FALSE
 
 # Functions
 plot_logement <- function(df, add_labels = TRUE, box.padding = 0.05) {
