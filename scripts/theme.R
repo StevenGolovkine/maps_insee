@@ -37,9 +37,9 @@ theme_own <- function(
         axis.ticks.length.y.left = NULL, 
         axis.ticks.length.y.right = NULL,
         legend.box = NULL, 
-        legend.key.size = unit(1.2, "lines"),
-        legend.position = "bottom", 
-        legend.text = element_text(size = rel(0.8)),
+        legend.key.size = unit(0.5, "lines"),
+        legend.position = c(0.95, 0.5),
+        legend.text = element_text(size = 6, family = "Courier"),
         legend.title = element_text(hjust = 0), 
         strip.clip = "inherit",
         strip.text = element_text(size = rel(0.8)), 
@@ -47,21 +47,25 @@ theme_own <- function(
         strip.switch.pad.wrap = unit(half_line/2, "pt"),
         panel.ontop = FALSE,
         panel.spacing = unit(half_line, "pt"),
-        plot.margin = unit(c(0, 0, 0, 0), "lines"), 
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "lines"), 
         plot.title = element_text(
-            size = rel(1.2), 
+            size = 8,
+            family = "Courier",
             hjust = 0, 
             vjust = 1, 
             margin = margin(t = half_line)
         ), 
         plot.title.position = "panel", 
         plot.subtitle = element_text(
+            size = 6,
+            family = "Courier",
             hjust = 0,
             vjust = 1,
             margin = margin(t = half_line)
         ), 
         plot.caption = element_text(
-            size = rel(0.8),
+            size = 4,
+            family = "Courier",
             hjust = 1, 
             vjust = 1,
             margin = margin(t = half_line)
