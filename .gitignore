@@ -1,7 +1,11 @@
 # .gitignore
 
+# R files
+maps_insee.Rproj
+
 # macos files
 .DS_Store
 
 # Data files
 data/*
+.Rproj.user
