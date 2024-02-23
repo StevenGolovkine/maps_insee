@@ -21,7 +21,9 @@ df <- fr |>
 df <- df |>
     mutate(n_logement_bin = cut(N_LOGEMENT, breaks = seq(0, 8e5, by = 1e5))) |> 
     mutate(n_logement_print = scales::label_number(
-        scale_cut = scales::cut_short_scale(), accuracy = 0.1)(N_LOGEMENT)
+            scale_cut = append(scales::cut_short_scale(), 1, 1), # workaround with scales 1.3.0
+            accuracy = 0.1
+        )(N_LOGEMENT)
     )
 
 # Variables
@@ -31,7 +33,7 @@ PARIS <- c('Paris', 'Hauts-de-Seine', 'Seine-Saint-Denis', 'Val-de-Marne')
 PALETTE <- RColorBrewer::brewer.pal(8, "PuRd")
 names(PALETTE) <- levels(df$n_logement_bin)
 
-ADD_LABELS <- FALSE
+ADD_LABELS <- TRUE
 
 # Functions
 plot_logement <- function(df, add_labels = TRUE, box.padding = 0.05) {
@@ -142,9 +144,9 @@ gg <- fr_metro_gg +
     )
 
 ggsave(
-    "./figures/logement.png",
+    "./figures/logement_labels.png",
     plot = gg,
     width = 1080, height = 1080, units = "px",
-    bg = "white"
+    bg = "#E4F4F3"
 )
 
